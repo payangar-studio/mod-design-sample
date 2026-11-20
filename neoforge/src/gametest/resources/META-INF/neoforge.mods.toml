@@ -1,0 +1,7 @@
+# The test mod of the gametests, loaded only by `runGameTestServer`.
+license = "MIT"
+
+[[mods]]
+modId = "design_sample_gametest"
+version = "0.0.0"
+displayName = "design_sample gametests"

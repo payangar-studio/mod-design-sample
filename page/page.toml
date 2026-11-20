@@ -1,0 +1,36 @@
+# The project page on each platform, in the format the modpack uses. The long
+# description is `description.md`, the icon `icon.png` (optional, square), the
+# screenshots `gallery/`. A platform without a project id is skipped at
+# publication.
+
+# Name of the project.
+name = "Design Sample"
+# One or two sentences, shown under the name in search results.
+summary = ""
+
+# Links shown on every platform; an empty one is left out.
+[links]
+source = ""
+issues = ""
+wiki = ""
+discord = ""
+
+[modrinth]
+# Written when the project is created.
+project_id = ""
+# URL name; empty: derived from the name when the project is created.
+slug = ""
+# Featured categories (at most 3), then the others. Modrinth's list:
+# https://api.modrinth.com/v2/tag/category (project type `mod`).
+categories = []
+additional_categories = []
+# SPDX id, such as `MIT`.
+license = "MIT"
+
+[curseforge]
+# Written when the project is created.
+project_id = ""
+# Main category first, then the others, as named on CurseForge.
+categories = []
+# License as named in CurseForge's list.
+license = ""

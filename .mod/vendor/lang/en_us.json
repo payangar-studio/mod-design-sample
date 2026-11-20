@@ -1,0 +1,12 @@
+{
+  "config.title": "Settings",
+  "config.reset": "Reset",
+  "config.search": "Search...",
+  "config.scopes": "Scopes",
+  "config.scope.client": "Client",
+  "config.scope.server": "Server",
+  "config.settings": "Settings",
+  "config.read_only": "The server settings are changed in a world, by an operator.",
+  "config.broken_file": "The settings file could not be read: changes will not be saved.",
+  "config.no_match": "No setting matches the search."
+}

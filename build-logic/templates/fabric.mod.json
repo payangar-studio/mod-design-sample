@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "license": "${license}",
+  "environment": "${environment}",
+  "entrypoints": ${entrypoints},
+  "depends": ${depends},
+  "suggests": ${suggests},
+  "breaks": ${breaks}
+}

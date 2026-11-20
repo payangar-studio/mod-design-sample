@@ -1,0 +1,24 @@
+# The mod's identity and contract. The build fills fabric.mod.json and
+# neoforge.mods.toml from it: side (client, server, both-required,
+# both-optional), loaders, license and dependencies. A dependency is
+# declared once, for the loaders and for the publication:
+#   [[dependencies]]
+#   id = "sodium"          # mod id on the loaders
+#   type = "optional"      # required, optional or incompatible
+#   loaders = ["fabric"]   # all the mod's loaders when absent
+#   modrinth = "sodium"    # project slug on each platform
+#   curseforge = "sodium"
+
+id = "design_sample"
+name = "Design Sample"
+package = "com.payangar.designsample"
+side = "both-required"
+loaders = ["fabric", "neoforge"]
+license = "MIT"
+
+[[dependencies]]
+id = "fabric-api"
+type = "required"
+loaders = ["fabric"]
+modrinth = "fabric-api"
+curseforge = "fabric-api"

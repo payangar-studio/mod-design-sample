@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "design_sample_gametest",
+  "version": "0.0.0",
+  "name": "design_sample gametests",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": ["com.payangar.designsample.gametest.ExampleServerGameTest"],
+    "fabric-client-gametest": ["com.payangar.designsample.gametest.ExampleClientGameTest"]
+  },
+  "depends": {
+    "fabric-api": "*"
+  }
+}

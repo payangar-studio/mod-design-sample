@@ -1,0 +1,32 @@
+# Managed by mc-cli: `mod update` rewrites this file.
+# baudrier check-agents-md CI job, version 2.
+#
+# Checks every AGENTS.md and CLAUDE.md. A pull request also gets the amendment
+# limits, measured from its base; a push is checked without them, since each
+# version branch has its own history apart from the default branch.
+name: Agent instructions
+
+on:
+  push:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  check-agents-md:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The amendment limits diff against the base branch.
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Check AGENTS.md and CLAUDE.md
+        env:
+          BASE: ${{ github.base_ref }}
+        run: node .mod/scripts/check-agents-md.mjs ${BASE:+--base "origin/$BASE"}

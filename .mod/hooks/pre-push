@@ -1,0 +1,40 @@
+#!/bin/sh
+# Managed by mc-cli; `mod update` rewrites this file.
+# Before a push that carries release tags (v<version>, or v<version>+<minecraft>):
+# - refuses a tag whose commit has no notes in changelogs/<version>.md, which
+#   the publication requires;
+# - refuses a push of more than three tags: GitHub starts no workflow for it,
+#   so its release tags would publish nothing.
+# The publish workflow checks the changelog again: this hook only says it sooner.
+
+# The tags the publish workflow accepts.
+release='^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'
+tags=0
+releases=0
+status=0
+while read -r local_ref local_sha remote_ref remote_sha; do
+    case "$remote_ref" in
+        refs/tags/*) ;;
+        *) continue ;;
+    esac
+    tags=$((tags + 1))
+    # A deletion pushes an all-zero object id.
+    case "$local_sha" in
+        *[!0]*) ;;
+        *) continue ;;
+    esac
+    tag=${remote_ref#refs/tags/}
+    printf '%s\n' "$tag" | grep -Eq "$release" || continue
+    releases=$((releases + 1))
+    version=${tag#v}
+    version=${version%%+*}
+    if ! git cat-file -p "$local_sha:changelogs/$version.md" 2>/dev/null | grep -q '[^[:space:]]'; then
+        echo "mc-cli: tag $tag has no changelogs/$version.md in its commit, or it holds no notes; write the notes of $version there, commit them, move the tag onto that commit (git tag -f $tag), then push it again." >&2
+        status=1
+    fi
+done
+if [ "$releases" -gt 0 ] && [ "$tags" -gt 3 ]; then
+    echo "mc-cli: $tags tags in one push, $releases of them release tags; GitHub starts no workflow for a push of more than three tags, so push at most three at a time (git push origin <tag>)." >&2
+    status=1
+fi
+exit "$status"

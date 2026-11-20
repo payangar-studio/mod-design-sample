@@ -1,0 +1,42 @@
+# Managed by mc-cli: `mod update` rewrites this file.
+#
+# Publishes the mod to Modrinth and CurseForge when a release tag is pushed,
+# through the shared workflow of mc-cli: one version per loader, numbered
+# `<version>+<minecraft>-<loader>`. The tag is `v<version>` (`v1.2.0`), or
+# `v<version>+<minecraft>` (`v1.2.0+26.3`) when the same version ships on
+# several Minecraft branches. Its commit must be on the branch named after the
+# mod's Minecraft version, and hold changelogs/<version>.md.
+#
+# Push at most three tags at a time: GitHub starts no workflow for a push of
+# more than three tags. Running this workflow by hand from a tag, with `dry-run`, checks
+# the tag and shows what would be published, without publishing.
+#
+# Repository variables (Settings, Secrets and variables, Actions, Variables):
+# - INFISICAL_URL: URL of the vault;
+# - INFISICAL_IDENTITY_ID: id of the vault identity `ci-minecraft`.
+
+name: Publish
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Check the tag and describe the versions without publishing them
+        type: boolean
+        default: false
+
+permissions: {}
+
+jobs:
+  publish:
+    permissions:
+      contents: read
+      # The vault grants the secrets against the OIDC token of the tag.
+      id-token: write
+    uses: payangar-studio/mc-cli/.github/workflows/publish-mod.yml@v0.4.0
+    with:
+      dry-run: ${{ inputs.dry-run == true }}
+      vault-url: ${{ vars.INFISICAL_URL }}
+      identity-id: ${{ vars.INFISICAL_IDENTITY_ID }}

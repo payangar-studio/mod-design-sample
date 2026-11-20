@@ -1,0 +1,95 @@
+# Managed by mc-cli: `mod update` rewrites this file.
+#
+# The mod's tests, with the commands that run them locally:
+# - `check`: unit and integration tests, server gametests, NeoForge's server
+#   self-test (`./gradlew check`);
+# - `client`: Fabric's client gametests, dev and production clients, and
+#   NeoForge's client self-test, on a virtual display with software rendering
+#   (`./gradlew clientCheck`).
+# Every test task fails when it ran no test. The renders of the client
+# gametests are uploaded as the `screenshots` artifact (dev client) and the
+# `production-screenshots` one. References come from `screenshots`
+# (`./gradlew :fabric:promoteScreenshots -Pscreenshots=<dir>`), never from a
+# local GPU.
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    # The game servers it starts could hang.
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+      - run: ./gradlew --console=plain check
+      - name: Upload the reports and logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: check-reports
+          path: |
+            */build/reports/
+            */build/test-results/
+            */build/run/*/logs/
+          if-no-files-found: ignore
+
+  client:
+    runs-on: ubuntu-24.04
+    # The game clients it starts could hang.
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      # Keeps SDL on OpenGL with Mesa's software renderer.
+      SDL_OPENGL_FORCE_SRGB_FRAMEBUFFER: skip
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+      - name: Install the virtual display and the software renderers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb mesa-vulkan-drivers
+      - run: ./gradlew --console=plain clientCheck
+      - name: Upload the renders
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: screenshots
+          path: fabric/build/run/clientGameTest/screenshots/
+          if-no-files-found: ignore
+      - name: Upload the renders of the production client
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: production-screenshots
+          path: fabric/build/run/productionClientGameTest/screenshots/
+          if-no-files-found: ignore
+      - name: Upload the logs
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: client-logs
+          path: |
+            */build/run/*/logs/
+            */build/run/*/crash-reports/
+          if-no-files-found: ignore
