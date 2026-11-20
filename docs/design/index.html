@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Sample: design</title>
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --fg: #1d1c1a;
+    --muted: #5f5b53;
+    --rule: #d9d5cc;
+    --accent: #3f7d3a;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161614;
+      --fg: #ecebe6;
+      --muted: #a39f96;
+      --rule: #34322e;
+      --accent: #7cc36f;
+    }
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 3rem 16px;
+  }
+  h1 {
+    margin: 0 0 0.25rem;
+    font-size: 2rem;
+  }
+  .id {
+    color: var(--muted);
+    font-family: ui-monospace, "Cascadia Code", Menlo, monospace;
+  }
+  .empty {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+  code {
+    font-family: ui-monospace, "Cascadia Code", Menlo, monospace;
+    font-size: 0.92em;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Design Sample</h1>
+  <div class="id">design_sample</div>
+  <p class="empty">
+    The design of this mod is not written yet. It lives in
+    <code>docs/design/</code> on the <code>design</code> branch, and this page
+    is built from it.
+  </p>
+</main>
+</body>
+</html>
